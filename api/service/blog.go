@@ -26,26 +26,11 @@ func (b BlogService) ListContent(article models.Article, keyword string) (*[]mod
 }
 
 //Post article
-func (b BlogService) PostArticle(article models.Article, keyword string) (*[]models.Article, error) {
-	return b.repository.PostArticle(article, keyword)
+func (b BlogService) PostArticle(article models.Article, keyword string) error {
+	return nil
 }
 
 //List all comments on article
-func (b BlogService) ListComment(article models.Article, keyword string) (*[]models.Article, error) {
+func (b BlogService) ListComment(article models.Article, keyword string) (models.Article, error) {
 	return b.repository.ListComment(article, keyword)
-}
-
-type CommentService struct {
-	repository repository.CommentRepository
-}
-
-func NewCommentService(r repository.CommentRepository) CommentService {
-	return CommentService{
-		repository: r,
-	}
-}
-
-// comment on comment
-func (c CommentService) PostComment(article models.Article, keyword string) (*[]models.Article, error) {
-	return c.repository.PostComment(article, keyword)
 }

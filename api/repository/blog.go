@@ -27,7 +27,7 @@ func NewCommentRepository(db infrastructure.Database) CommentRepository {
 }
 
 //Save repo for article
-func (b BlogRepository) SaveArticle(blog models.Article) error {
+func (b BlogRepository) PostArticle(blog models.Article) error {
 	return b.db.DB.Create(&blog).Error
 }
 
@@ -51,7 +51,7 @@ func (b BlogRepository) ListAll(article models.Article) (*[]models.Article, int6
 
 }
 
-//get an article content based on title
+//get an article content
 func (b BlogRepository) ListContent(article models.Article, keyword string) (*[]models.Article, error) {
 	var articles []models.Article
 
@@ -64,11 +64,11 @@ func (b BlogRepository) ListContent(article models.Article, keyword string) (*[]
 	return &articles, err
 }
 
-//List all comments on article
-func (b BlogRepository) ListComment(article models.Article, keyword string) (*[]models.Article, error) {
+//List all comments on article by nickname
+func (b BlogRepository) ListComment(article models.Article, keyword string) (models.Article, error) {
 	var articles models.Article
 
-	result := b.db.DB.Select("article.Comment").Find(&articles)
+	result := b.db.DB.Select("article.Comment").Where("article.Nickname LIKE ?", keyword)
 	err := result.
 		Debug().
 		Model(&models.Article{}).
@@ -76,10 +76,3 @@ func (b BlogRepository) ListComment(article models.Article, keyword string) (*[]
 		Take(&articles).Error
 	return articles, err
 }
-
-//POst an article
-func (b BlogRepository) PostArticle(article models.Article, keyword string) (*[]models.Article, error) {
-	return b.repository.PostArticle(article, keyword)
-}
-
-//comment on comment
